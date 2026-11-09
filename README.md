@@ -6,15 +6,15 @@
 
 ## 立即访问
 
-**本机演示链接：<http://127.0.0.1:62180/>**
+**GitHub Pages 永久链接：<https://qhx245.github.io/night-watch-smart-care/>**
 
-需保持本机静态服务运行：
+本机演示时需保持静态服务运行：
 
 ```powershell
 python -m http.server 62180 --bind 127.0.0.1
 ```
 
-如需公网发布，将整个文件夹上传到任意静态托管，保持 `index.html`、`styles.css`、`app.js`、`favicon.svg` 的相对路径不变。
+本机地址是 `http://127.0.0.1:62180/`，只适合本机演示；对外分享请使用上面的 GitHub Pages 链接。
 
 ## 体验主线
 
