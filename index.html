@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-text="normal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111c">
+  <meta name="description" content="《守夜人》是面向社区居民的智慧养老互动科普 H5：用 3 分钟夜间情景，理解跌倒监测、应急联动、隐私边界与科学方法。">
+  <meta property="og:title" content="守夜人｜爸妈睡下后，谁来守这盏灯？">
+  <meta property="og:description" content="智慧社区·智慧养老互动科普：3 分钟夜间守护实验，带你理解传感器、应急联动与隐私边界。">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <title>守夜人｜智慧社区·智慧养老互动科普</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#simulator">跳过导航，直接开始体验</a>
+  <div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
+
+  <svg class="svg-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.2 15.1A8.4 8.4 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"/><path d="M17.2 3.4v3.2M15.6 5h3.2"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.8"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><path d="M12 12 19 5"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21h14M7 21V4.5A1.5 1.5 0 0 1 8.5 3h7A1.5 1.5 0 0 1 17 4.5V21"/><circle cx="14.5" cy="12" r=".9" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-call" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="3"/><path d="M10 6h4M11 18h2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 20 6v5.4c0 4.4-3.1 8.2-8 9.6-4.9-1.4-8-5.2-8-9.6V6l8-3Z"/><path d="m8.7 12.2 2.2 2.2 4.4-4.6"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.9a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.8-7.3 1.1-1a5.5 5.5 0 0 0-.1-7.8Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.2 4.2L19 6.8"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.8 20h18.4L12 3Z"/><path d="M12 9v5M12 17.2v.1"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.3M12 19.7V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.3M19.7 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></symbol>
+    <symbol id="i-pill" viewBox="0 0 24 24"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5" transform="rotate(-35 12 12)"/><path d="m8.4 15.6 7.2-7.2"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M13.2 2.8c.8 4.2-2.4 5.3-2.4 8.2 0 1.4.8 2.4 1.9 2.4 1.3 0 2.1-1.2 2-2.8 2.1 1.7 3.3 3.7 3.3 6a6 6 0 0 1-12 0c0-4.4 3.7-7.4 4.1-11.2.5-.9 1.6-1.9 3.1-2.6Z"/></symbol>
+    <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13.5" cy="4.5" r="2"/><path d="m13.5 8-3 4 3.3 3.1-2.2 5.4M10.5 12l-3.4 2.2M13.8 15.1l3.8 1.7M8.2 8.6l2.7-1.2 2.6.6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5M4 20h16"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10.5V17M12 7.2v.1"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10M12 14v3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 6.3A10.8 10.8 0 0 1 12 6.2c5.6 0 9.5 5.8 9.5 5.8a18 18 0 0 1-2.2 2.8M6.1 7.2A17 17 0 0 0 2.5 12S6.4 17.8 12 17.8c1.4 0 2.7-.4 3.8-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.3 2"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="守夜人首页">
+      <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg></span>
+      <span class="brand-text"><strong>守夜人</strong><small>智慧社区 · 智慧养老</small></span>
+    </a>
+    <nav class="top-actions" aria-label="页面导航">
+      <a class="nav-link" href="#day">24小时</a>
+      <a class="nav-link" href="#myths">识伪科普</a>
+      <a class="nav-link nav-link-optional" href="#science">科学依据</a>
+      <button id="textToggle" class="ghost-btn" type="button" aria-pressed="false" title="放大全页文字">
+        <span class="text-toggle-label">大字模式</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>智慧社区 · 智慧养老</p>
+        <h1 id="heroTitle">爸妈睡下后，<br><em>谁来守这盏灯？</em></h1>
+        <p class="lede">在智慧社区的五大方向中，我们聚焦“智慧养老”。用 3 分钟做一次“夜间守护”实验，看看传感器怎样发现异常，人又该在什么时候接手。</p>
+        <div class="hero-actions">
+          <a class="primary-btn js-start" href="#simulator">开始值夜班 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+          <a class="text-btn" href="#science">先看科学依据</a>
+        </div>
+        <ul class="hero-meta" aria-label="体验信息">
+          <li><strong>3</strong><span>个判断</span></li>
+          <li><strong>0</strong><span>需要注册</span></li>
+          <li><strong>1</strong><span>张守夜卡</span></li>
+        </ul>
+        <p class="audience">为社区居民设计 · 尤其适合 60 岁以上老人与子女一起看</p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="monitor">
+          <div class="monitor-head">
+            <span class="monitor-time">02:37</span>
+            <span class="live-tag"><i></i> 模拟监测</span>
+          </div>
+          <div class="radar">
+            <span class="radar-sweep"></span>
+            <span class="radar-ring r1"></span>
+            <span class="radar-ring r2"></span>
+            <span class="radar-ring r3"></span>
+            <span class="radar-core"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg></span>
+            <span class="radar-dot d1"></span>
+            <span class="radar-dot d2"></span>
+            <span class="radar-dot d3"></span>
+          </div>
+          <div class="vital-row">
+            <div><span class="vital-label">呼吸</span><strong>14</strong><small>次/分</small></div>
+            <svg class="wave" viewBox="0 0 150 44" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 24h12l6-10 7 22 7-16 7 5h13l6-11 7 20 7-9h12l6-7 7 14 7-6h14l6-9 7 17 7-11h12"/>
+            </svg>
+          </div>
+          <div class="monitor-foot"><svg class="icon" aria-hidden="true"><use href="#i-radar"></use></svg> 卧室 · 毫米波雷达</div>
+        </div>
+        <div class="float-card fc-one"><span class="status-dot"></span> 体动平稳</div>
+        <div class="float-card fc-two"><svg class="icon" aria-hidden="true"><use href="#i-door"></use></svg><span>门磁</span><strong>关闭</strong></div>
+        <p class="visual-caption">界面示意 · 数值为教学模拟</p>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="三个关键数据">
+      <article class="stat-card">
+        <span class="stat-kicker">我国 60 岁及以上人口</span>
+        <p class="stat-number">3.10<span>亿</span></p>
+        <p class="stat-foot">占全国人口 22.0% · 2024 年末</p>
+        <a href="#source-1" class="stat-source">国家统计局 ↗</a>
+      </article>
+      <article class="stat-card">
+        <span class="stat-kicker">全球每年跌倒致死人数</span>
+        <p class="stat-number">68.4<span>万</span></p>
+        <p class="stat-foot">60 岁以上人群死亡率最高</p>
+        <a href="#source-2" class="stat-source">世界卫生组织 ↗</a>
+      </article>
+      <article class="stat-card">
+        <span class="stat-kicker">我国 65 岁以上老年人</span>
+        <p class="stat-number">首位</p>
+        <p class="stat-foot">因伤害死亡的首位原因</p>
+        <a href="#source-3" class="stat-source">中国疾控中心慢病中心 ↗</a>
+      </article>
+      <p class="stats-note">这些数字不是为了制造焦虑，而是提醒：夜里的那一声异常，值得被认真接住。</p>
+    </section>
+
+    <section id="simulator" class="section simulator-section" aria-labelledby="simTitle" tabindex="-1">
+      <div class="section-head">
+        <p class="kicker">01 / 夜间实验</p>
+        <h2 id="simTitle">凌晨 2:37，报警响了</h2>
+        <p>社区智慧养老平台弹出一条告警。你是今晚的守夜人。以下为教学情景，人物与事件均为虚构，设备数值均为模拟；真实设备可能误报，也可能漏报。</p>
+      </div>
+
+      <div class="sim-shell" id="simShell">
+        <aside class="sensor-panel" aria-label="模拟传感器面板">
+          <div class="panel-head">
+            <span><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg> 02:37 夜间值守</span>
+            <span class="demo-badge">演示数据</span>
+          </div>
+          <div class="device-list">
+            <article class="device-card" id="deviceRadar">
+              <span class="device-icon"><svg class="icon" aria-hidden="true"><use href="#i-radar"></use></svg></span>
+              <span class="device-copy"><small>卧室 · 毫米波雷达</small><strong id="radarStatus">疑似跌倒</strong></span>
+              <span class="device-light warning" id="radarLight"></span>
+            </article>
+            <article class="device-card" id="deviceDoor">
+              <span class="device-icon"><svg class="icon" aria-hidden="true"><use href="#i-door"></use></svg></span>
+              <span class="device-copy"><small>入户门 · 门磁</small><strong id="doorStatus">关闭</strong></span>
+              <span class="device-light ok" id="doorLight"></span>
+            </article>
+            <article class="device-card" id="deviceCall">
+              <span class="device-icon"><svg class="icon" aria-hidden="true"><use href="#i-call"></use></svg></span>
+              <span class="device-copy"><small>床头 · 一键呼叫</small><strong id="callStatus">未触发</strong></span>
+              <span class="device-light idle" id="callLight"></span>
+            </article>
+          </div>
+
+          <div class="event-feed">
+            <div class="feed-head"><span>事件流</span><span class="feed-live"><i></i> LIVE</span></div>
+            <ol id="eventList" class="event-list" aria-live="polite">
+              <li><time>02:36:58</time><span>雷达检测到快速下坠</span></li>
+              <li><time>02:37:04</time><span>体动消失，持续 30 秒</span></li>
+              <li><time>02:37:08</time><span>平台生成一级告警</span></li>
+            </ol>
+          </div>
+          <p class="panel-foot"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> 模拟数据仅用于教学，不接入真实设备或平台。</p>
+        </aside>
+
+        <div class="scenario-panel">
+          <div class="progress-head">
+            <span id="stepLabel">判断 1 / 3</span>
+            <span class="progress-track" aria-hidden="true"><i id="progressBar"></i></span>
+            <span id="scoreLabel">守护值 0 / 90</span>
+          </div>
+          <div id="scenarioContent" class="scenario-content" aria-live="polite"></div>
+          <div id="feedback" class="feedback" hidden aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="report" class="section report-section" hidden aria-labelledby="reportTitle">
+      <div class="report-card">
+        <p class="kicker">02 / 守夜报告</p>
+        <h2 id="reportTitle" tabindex="-1">今晚，你守住了什么？</h2>
+        <div class="report-summary">
+          <div class="score-ring" id="scoreRing" aria-label="本次守护值">
+            <div><strong id="scoreValue">0</strong><span>/ 90</span><small>守护值</small></div>
+          </div>
+          <div class="report-copy">
+            <p id="reportLead" class="report-lead"></p>
+            <div id="badgeList" class="badge-list" aria-label="获得的守护徽章"></div>
+            <p class="micro-note">这个分数只记录本次模拟判断，不代表真实设备性能或安全能力。</p>
+          </div>
+        </div>
+
+        <div class="takeaways">
+          <article><span>01</span><h3>报警先验证</h3><p>语音确认，设 30 秒时限；无应答立即升级。报警是待验证的异常，不是诊断。</p></article>
+          <article><span>02</span><h3>通知要并行</h3><p>物业上门、子女电话、120 评估同时启动。紧急情况最怕“排队等回复”。</p></article>
+          <article><span>03</span><h3>急救不盲动</h3><p>先判断意识、呼吸和伤情；不随意搬动、不喂水，注意保暖，听 120 调度员指导。</p></article>
+        </div>
+
+        <div class="report-actions">
+          <button class="primary-btn" type="button" id="openShareCard">生成家庭守夜卡 <svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></button>
+          <button class="ghost-btn" type="button" id="restartBtn">再体验一次</button>
+          <a class="text-btn" href="#day">继续探索 24 小时 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="day" class="section day-section" aria-labelledby="dayTitle">
+      <div class="section-head">
+        <p class="kicker">03 / 一天</p>
+        <h2 id="dayTitle">把守护放进 24 小时</h2>
+        <p>智慧养老不是一件“神器”，而是多个场景的接力。点一点，看看每个时刻技术能做什么、不能做什么。</p>
+      </div>
+
+      <div class="timeline" role="tablist" aria-label="一天中的五个守护时刻">
+        <button class="time-node is-active" type="button" role="tab" aria-selected="true" aria-controls="timeDetail" data-time="morning">
+          <span class="node-dot"><svg class="icon" aria-hidden="true"><use href="#i-sun"></use></svg></span>
+          <strong>06:30</strong><span>起床</span>
+        </button>
+        <button class="time-node" type="button" role="tab" aria-selected="false" aria-controls="timeDetail" data-time="medicine">
+          <span class="node-dot"><svg class="icon" aria-hidden="true"><use href="#i-pill"></use></svg></span>
+          <strong>08:00</strong><span>服药</span>
+        </button>
+        <button class="time-node" type="button" role="tab" aria-selected="false" aria-controls="timeDetail" data-time="cooking">
+          <span class="node-dot"><svg class="icon" aria-hidden="true"><use href="#i-flame"></use></svg></span>
+          <strong>12:00</strong><span>做饭</span>
+        </button>
+        <button class="time-node" type="button" role="tab" aria-selected="false" aria-controls="timeDetail" data-time="walk">
+          <span class="node-dot"><svg class="icon" aria-hidden="true"><use href="#i-walk"></use></svg></span>
+          <strong>18:00</strong><span>散步</span>
+        </button>
+        <button class="time-node" type="button" role="tab" aria-selected="false" aria-controls="timeDetail" data-time="night">
+          <span class="node-dot"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg></span>
+          <strong>02:37</strong><span>睡眠</span>
+        </button>
+      </div>
+
+      <div id="timeDetail" class="time-detail" role="tabpanel" aria-live="polite">
+        <div class="time-story">
+          <span class="detail-label" id="timeLabel">起床时刻</span>
+          <h3 id="timeTitle">06:30 · 起床</h3>
+          <p id="timeDesc">从躺到坐、再到站，是老年人容易头晕和跌倒的时刻。设备可以记录“离床”，但起身稳不稳，仍需要人观察。</p>
+        </div>
+        <div class="time-facts">
+          <div class="fact can"><span><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> 技术能做</span><p id="timeCan">床垫或雷达记录离床时间；长时间未回床，推送提醒给联系人。</p></div>
+          <div class="fact cannot"><span><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg> 技术不能</span><p id="timeCannot">不能判断头晕、低血糖或体位性低血压；一句“您慢点”仍然重要。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section devices-section" aria-labelledby="devicesTitle">
+      <div class="section-head">
+        <p class="kicker">04 / 工具</p>
+        <h2 id="devicesTitle">三件套，各守一段</h2>
+        <p>不是越多越好，而是刚好覆盖“睡眠—出入—主动求助”三个关键点。每一件设备都有边界。</p>
+      </div>
+      <div class="device-grid">
+        <article class="tool-card">
+          <div class="tool-art art-radar" aria-hidden="true"><svg class="icon"><use href="#i-radar"></use></svg><i></i><i></i><i></i></div>
+          <span class="tool-tag">卧室</span>
+          <h3>毫米波雷达</h3>
+          <p class="tool-lead">看体动，不看画面。</p>
+          <p>发射低功率无线电波，接收人体反射；从微动中提取呼吸、体动和跌倒姿态，不采集光学图像。</p>
+          <dl class="can-cannot">
+            <div><dt>能</dt><dd>夜间监测呼吸与体动，异常静止时报警。</dd></div>
+            <div><dt>不能</dt><dd>不能诊断疾病；风扇、宠物等可能干扰，需要调试与人工确认。</dd></div>
+          </dl>
+        </article>
+        <article class="tool-card">
+          <div class="tool-art art-door" aria-hidden="true"><svg class="icon"><use href="#i-door"></use></svg><span class="door-line"></span></div>
+          <span class="tool-tag">门口</span>
+          <h3>门磁传感器</h3>
+          <p class="tool-lead">知道门有没有开。</p>
+          <p>常见的门磁用磁铁靠近或离开，让内部簧片开关通断；平台据此知道门是打开还是关闭。</p>
+          <dl class="can-cannot">
+            <div><dt>能</dt><dd>判断门是否打开；长时间无开合可作为辅助线索。</dd></div>
+            <div><dt>不能</dt><dd>不知道屋里的人是否跌倒，不能替代室内监测。</dd></div>
+          </dl>
+        </article>
+        <article class="tool-card">
+          <div class="tool-art art-call" aria-hidden="true"><span class="call-ring"></span><svg class="icon"><use href="#i-call"></use></svg><span class="call-dot"></span></div>
+          <span class="tool-tag">随身</span>
+          <h3>一键呼叫</h3>
+          <p class="tool-lead">把求助变简单。</p>
+          <p>按下按钮，通过无线或蜂窝网络呼叫预设联系人；部分手环带有加速度计，可辅助跌倒检测。</p>
+          <dl class="can-cannot">
+            <div><dt>能</dt><dd>让老人主动求助，适合放在床头、卫生间等位置。</dd></div>
+            <div><dt>不能</dt><dd>没戴、没按、没电就不会工作；不能保证 100% 发现跌倒。</dd></div>
+          </dl>
+        </article>
+      </div>
+      <p class="device-note"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> 组合逻辑：卧室雷达 + 门口门磁 + 随身呼叫，覆盖“睡眠—出入—主动求助”。设备要能稳定运行，更要有人响应。</p>
+    </section>
+
+    <section id="privacy" class="section privacy-section" aria-labelledby="privacyTitle">
+      <div class="section-head">
+        <p class="kicker">05 / 边界</p>
+        <h2 id="privacyTitle">装之前，先过三道隐私关</h2>
+        <p>技术照护的底线是：老人知道、同意、可退出；数据只用在说清楚的目的上。动动开关，看看你的“隐私友好度”。</p>
+      </div>
+
+      <div class="privacy-layout">
+        <div class="privacy-controls">
+          <label class="switch-row">
+            <span class="switch-copy"><strong>跌倒告警只发给紧急联系人</strong><small>建议开启 · 让该响应的人及时收到</small></span>
+            <span class="switch"><input type="checkbox" id="privacyAlert" checked><span class="slider"></span></span>
+          </label>
+          <label class="switch-row">
+            <span class="switch-copy"><strong>在卧室装 24 小时摄像头</strong><small>建议关闭 · 更衣、起夜都可能被拍到</small></span>
+            <span class="switch"><input type="checkbox" id="privacyCamera"><span class="slider"></span></span>
+          </label>
+          <label class="switch-row">
+            <span class="switch-copy"><strong>把实时位置共享给所有亲友</strong><small>建议关闭 · 共享范围过大，难以撤回</small></span>
+            <span class="switch"><input type="checkbox" id="privacyLocation"><span class="slider"></span></span>
+          </label>
+          <p class="switch-note" id="privacyNote">当前设置：只把异常事件发给该响应的人，边界感很好。</p>
+        </div>
+
+        <aside class="privacy-meter" aria-live="polite">
+          <span class="meter-label">隐私友好度</span>
+          <div class="meter-ring" id="meterRing"><strong id="privacyScore">100</strong><span>/ 100</span></div>
+          <p id="privacyVerdict">边界感很好</p>
+          <div class="data-flow" aria-hidden="true">
+            <span>雷达信号</span><i>→</i><span>社区平台</span><i>→</i><span>紧急联系人</span>
+          </div>
+          <p class="meter-foot">只传“异常事件”，不传原始波形与影像；能少采就少采，能少给就少给。</p>
+        </aside>
+      </div>
+
+      <div class="law-card">
+        <svg class="icon" aria-hidden="true"><use href="#i-lock"></use></svg>
+        <div>
+          <p><strong>《个人信息保护法》第六条</strong>：处理个人信息应当具有明确、合理的目的，并应当与处理目的直接相关，采取对个人权益影响最小的方式。收集个人信息，应当限于实现处理目的的最小范围，不得过度收集个人信息。</p>
+          <p class="law-note">记住三句话：不拍画面 ≠ 不用同意；数据够用就好；照护不能代替本人意愿。</p>
+        </div>
+      </div>
+
+      <div class="ask-card">
+        <h3>给爸妈装设备前，先问三句话</h3>
+        <ol>
+          <li><span>01</span>您愿意装在哪里？</li>
+          <li><span>02</span>哪些数据可以给谁看？</li>
+          <li><span>03</span>出事时，谁先到？</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="myths" class="section myths-section" aria-labelledby="mythsTitle">
+      <div class="section-head">
+        <p class="kicker">06 / 识伪</p>
+        <h2 id="mythsTitle">四句“听起来很对”的话</h2>
+        <p>真正的科学精神，不是相信技术永远正确，而是允许证据来纠正我们。点开卡片，看看哪一句被夸大了。</p>
+      </div>
+      <div class="myth-grid">
+        <article class="myth-card">
+          <button class="myth-toggle" type="button" aria-expanded="false">
+            <span class="myth-num">说法 01</span>
+            <span class="myth-quote">“装了 AI 设备，老人就不会跌倒了。”</span>
+            <span class="myth-cta">翻开真相 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span>
+          </button>
+          <div class="myth-answer" hidden>
+            <span class="verdict verdict-warn">夸大</span>
+            <p>设备能缩短发现时间、连接响应链，但不能消除跌倒风险。跌倒预防还要靠运动、家居改造、用药评估和视力管理。</p>
+            <a href="#science">看依据 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+          </div>
+        </article>
+        <article class="myth-card">
+          <button class="myth-toggle" type="button" aria-expanded="false">
+            <span class="myth-num">说法 02</span>
+            <span class="myth-quote">“毫米波雷达不拍画面，所以不用告诉老人。”</span>
+            <span class="myth-cta">翻开真相 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span>
+          </button>
+          <div class="myth-answer" hidden>
+            <span class="verdict verdict-warn">错</span>
+            <p>不用影像，不等于不处理个人信息。安装前要说明用途、范围和谁能看，征得同意，并保留退出选项。</p>
+            <a href="#privacy">看隐私边界 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+          </div>
+        </article>
+        <article class="myth-card">
+          <button class="myth-toggle" type="button" aria-expanded="false">
+            <span class="myth-num">说法 03</span>
+            <span class="myth-quote">“老人跌倒后，赶紧扶起来最要紧。”</span>
+            <span class="myth-cta">翻开真相 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span>
+          </button>
+          <div class="myth-answer" hidden>
+            <span class="verdict verdict-danger">危险</span>
+            <p>先判断意识、呼吸和伤情。怀疑骨折或脊柱损伤时不要随意搬动；拨打 120，注意保暖，按调度员指导处理。</p>
+            <a href="#source-3">看急救依据 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+          </div>
+        </article>
+        <article class="myth-card">
+          <button class="myth-toggle" type="button" aria-expanded="false">
+            <span class="myth-num">说法 04</span>
+            <span class="myth-quote">“设备越多、数据越全，就越安全。”</span>
+            <span class="myth-cta">翻开真相 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span>
+          </button>
+          <div class="myth-answer" hidden>
+            <span class="verdict verdict-warn">不一定</span>
+            <p>关键在覆盖场景、稳定运行和有人响应。过度采集会增加隐私风险和操作负担，也可能让老人干脆不用。</p>
+            <a href="#privacy">看怎么选 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+          </div>
+        </article>
+      </div>
+      <p class="myth-progress" id="mythProgress" aria-live="polite">已翻开 0 / 4 张真相卡</p>
+    </section>
+
+    <section id="science" class="section science-section" aria-labelledby="scienceTitle">
+      <div class="section-head">
+        <p class="kicker">07 / 依据</p>
+        <h2 id="scienceTitle">数字有出处，说法有边界</h2>
+        <p>科普不是“把复杂说简单”就够了，还要把证据和不确定性一起说清楚。下面每一条都可以回到原始来源。</p>
+      </div>
+
+      <div class="method-grid" aria-label="科学方法四步">
+        <article><span>1</span><h3>观察</h3><p>雷达捕捉到“快速下坠、随后静止”的信号。</p></article>
+        <article><span>2</span><h3>假设</h3><p>可能是跌倒，也可能只是翻身、掉物或宠物经过。</p></article>
+        <article><span>3</span><h3>验证</h3><p>语音确认、门磁辅助、人工查看，交叉核对。</p></article>
+        <article><span>4</span><h3>修正</h3><p>记录误报，调整位置与阈值，让系统更可靠。</p></article>
+      </div>
+      <p class="method-line">报警不是结论，而是一个待验证的假设。</p>
+      <p class="scientist-note">科学家精神，不只是实验室里的攻关，也是在社区里把复杂问题讲清楚、把不确定性说明白、把选择权交还给公众。</p>
+
+      <div class="evidence-grid">
+        <article class="evidence-card">
+          <span class="evidence-tag">可预防</span>
+          <h3>跌倒不是“老了没办法”</h3>
+          <p>世卫组织列出的老年人跌倒预防措施包括：步态、平衡和功能训练，太极拳，家居评估与改造，减少或停用精神药物，多因素风险评估与转诊等。</p>
+          <a href="https://www.who.int/zh/news-room/fact-sheets/detail/falls" target="_blank" rel="noopener noreferrer">WHO《跌伤》实况报道 ↗</a>
+        </article>
+        <article class="evidence-card">
+          <span class="evidence-tag">要响应</span>
+          <h3>技术只完成“发现”，人完成“接住”</h3>
+          <p>传感器把异常变成一条消息；真正决定结局的，是谁在多久内确认、谁上门、谁联系急救。没有响应链的设备，只是一盏会亮的灯。</p>
+          <a href="#simulator">回到夜间实验 ↗</a>
+        </article>
+        <article class="evidence-card">
+          <span class="evidence-tag">有误差</span>
+          <h3>再聪明的算法，也需要被纠正</h3>
+          <p>单一传感器可能漏报或误报；多源信息融合、人工确认、定期测试，是比“准确率口号”更可靠的做法。科学允许被证据修正。</p>
+          <a href="#myths">看四条识伪卡 ↗</a>
+        </article>
+      </div>
+
+      <div class="sources">
+        <div class="sources-head">
+          <h3>数据与资料出处</h3>
+          <p>检索日期：2026 年 11 月 1 日。所有数字均来自下列公开资料；页面内传感器数值为教学模拟。</p>
+        </div>
+        <ol class="source-list">
+          <li id="source-1"><span>01</span><div><a href="https://www.stats.gov.cn/zt_18555/zthd/lhfw/2025/2025_sjjd/202501/t20250127_1958518.html" target="_blank" rel="noopener noreferrer">国家统计局：2024 年人口数据（2025-01-17）</a><p>2024 年末，全国 60 岁及以上人口 31031 万人，占 22.0%；65 岁及以上人口 22023 万人，占 15.6%。</p></div></li>
+          <li id="source-2"><span>02</span><div><a href="https://www.who.int/zh/news-room/fact-sheets/detail/falls" target="_blank" rel="noopener noreferrer">世界卫生组织：跌伤实况报道（2021-04-26）</a><p>每年约 68.4 万例致命跌伤；60 岁以上成年人死亡率最高；跌倒相关伤害可导致长期照护需求。</p></div></li>
+          <li id="source-3"><span>03</span><div><a href="https://ncncd.chinacdc.cn/xzzq/202409/t20240923_311832.htm" target="_blank" rel="noopener noreferrer">中国疾控中心慢病中心：《预防老年人跌倒健康教育核心信息》（2021-10-12）</a><p>跌倒是我国 65 岁及以上老年人因伤害死亡的首位原因；救助时应先判断伤情，避免盲目扶起加重损伤。</p></div></li>
+          <li id="source-4"><span>04</span><div><a href="https://ncncd.chinacdc.cn/jkzt_14579/202506/t20250623_311525.htm" target="_blank" rel="noopener noreferrer">中国疾控中心慢病中心：首个“老年人跌倒预防宣传周”（2025-06-23）</a><p>跌倒是我国老年人因伤害到医疗机构就诊的首位原因，也是 65 岁及以上老年人因伤害死亡的首位原因。</p></div></li>
+          <li id="source-5"><span>05</span><div><a href="https://www.sinomed.ac.cn/article.do?ui=2026174429" target="_blank" rel="noopener noreferrer">张夏等：《基于毫米波雷达的非接触式生理体征信号监测与处理技术综述》</a><p>《生物医学工程学进展》2025 年第 46 卷第 5 期。介绍毫米波雷达非接触监测生理体征的原理、系统模块与信号处理方法。</p></div></li>
+          <li id="source-6"><span>06</span><div><a href="https://www.spp.gov.cn/spp/fl/202108/t20210820_527244.shtml" target="_blank" rel="noopener noreferrer">《中华人民共和国个人信息保护法》第六条</a><p>处理个人信息应具有明确、合理的目的，采取对个人权益影响最小的方式，限于实现处理目的的最小范围。</p></div></li>
+          <li id="source-7"><span>07</span><div><a href="https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2021/art_a94683e447ba4ff5af7873d5d25fd6cd.html" target="_blank" rel="noopener noreferrer">工信部、民政部、国家卫健委：《智慧健康养老产业发展行动计划（2021—2025 年）》</a><p>国家层面推动智慧健康养老产品与服务发展的政策文件，强调新一代信息技术在养老场景中的应用。</p></div></li>
+        </ol>
+      </div>
+
+      <div class="science-foot">
+        <p><strong>科学边界：</strong>本 H5 是科普演示，不提供医疗诊断、急救调度或真实设备监测。如遇紧急情况，请立即拨打 120，并听从急救调度员指导。</p>
+        <p><strong>隐私说明：</strong>本页不收集、不上传任何个人信息；所有选择、开关与守夜卡生成都只在你的浏览器本地完成，刷新后即消失。</p>
+        <p><strong>版权说明：</strong>除标注引用的数据与文献外，本作品的界面、插画、文案与交互均由作者原创，使用 HTML/CSS/SVG 与系统字体制作，未使用第三方图片、字体或代码库。引用内容版权归原机构，仅用于公益科普与说明。</p>
+        <div class="doc-links">
+          <a href="downloads/operation-guide.docx"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg> 操作说明 DOCX</a>
+          <a href="downloads/operation-guide.pdf"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg> 操作说明 PDF</a>
+          <a href="downloads/creation-notes.docx"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg> 创作说明 DOCX</a>
+          <a href="downloads/creation-notes.pdf"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg> 创作说明 PDF</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg><span>守夜人</span></div>
+    <p>智慧社区 · 智慧养老互动科普 H5</p>
+    <p class="footer-small">技术是哨兵，不是医生；人是最后一道防线。</p>
+    <p class="footer-small">© 2026 本作品用于公益科普 · 转载或二次开发请保留来源与免责声明</p>
+  </footer>
+
+  <div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="document">
+      <button class="modal-close" type="button" id="closeModal" aria-label="关闭守夜卡"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      <p class="kicker">07 / 带回家</p>
+      <h2 id="shareTitle">你的家庭守夜卡</h2>
+      <p class="modal-lead">把这张卡存进相册，和家人一起补上“谁先到、谁来看、谁来决定”。</p>
+      <div class="share-preview">
+        <img id="shareImage" alt="家庭守夜卡预览，包含三项守夜原则和本次守护值">
+      </div>
+      <p class="save-hint">手机上长按图片保存；电脑上点击下方按钮下载。</p>
+      <div class="modal-actions">
+        <a class="primary-btn" id="downloadCard" download="家庭守夜卡.png" href="#"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg> 下载图片</a>
+        <button class="ghost-btn" type="button" id="copyCardText"><svg class="icon" aria-hidden="true"><use href="#i-copy"></use></svg> 复制守夜清单</button>
+      </div>
+      <p class="copy-status" id="copyStatus" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
